@@ -22,7 +22,7 @@ SCL (CLK)          | Pin 18        | Horloge
 SDA (DIN)          | Pin 23        | Données
 CS                 | Pin 5         | Chip Select
 RS (DC)            | Pin 2         | Data/Command
-RST                | Pin 0         | Reset
+RST                | Pin 4         | Reset
 
 --- CONNEXIONS CARTE SD (SPI MATÉRIEL) ---
 A (Module SD Pin)  | B (ESP32 Pin) | Fonction

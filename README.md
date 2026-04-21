@@ -1,6 +1,6 @@
-=====================================================================
-          PROJET HAKALIMERO - FICHE DE MONTAGE (VERSION V2.1.1)
-=====================================================================
+
+FICHE DE MONTAGE
+
 
 --- DESCRIPTION ---
 Appareil : Chronomètre GPS + Datalogger (5s) + Web Admin

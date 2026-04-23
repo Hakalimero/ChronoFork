@@ -8,23 +8,16 @@
 #define BTN_UP    33
 #define BTN_DOWN  25
 #define BTN_BACK  21
-#define LCD_RST   0
 
-U8G2_ST75256_JLX256160_F_4W_SW_SPI u8g2(U8G2_R0, 18, 23, 5, 2, LCD_RST);
-
-bool sdOk = false;
+// Mise à jour ici aussi (Reset sur Pin 4)
+U8G2_ST75256_JLX256160_F_4W_SW_SPI u8g2(U8G2_R0, 18, 23, 5, 2, 0);
 
 void setup() {
   Serial.begin(115200);
-  delay(500);
-  Serial.println("--- TEST MATERIEL CHRONOFORK V2.1.5 ---");
+  delay(1000);
+  Serial.println("--- TEST MATERIEL CHRONOFORK V2.1.4 ---");
 
-  // Reset ecran explicite (Pin 0 est un strap : piloter APRES le boot).
-  pinMode(LCD_RST, OUTPUT);
-  digitalWrite(LCD_RST, HIGH); delay(100);
-  digitalWrite(LCD_RST, LOW);  delay(200);
-  digitalWrite(LCD_RST, HIGH);
-
+  // 1. Ecran
   u8g2.begin();
   u8g2.setContrast(175);
   u8g2.clearBuffer();
@@ -33,12 +26,18 @@ void setup() {
   u8g2.sendBuffer();
   Serial.println("Ecran Initialise.");
 
+  // 2. SD
   SPI.begin(14, 27, 13, SD_CS);
-  sdOk = SD.begin(SD_CS);
-  u8g2.drawStr(10, 60, sdOk ? "2. SD CARD OK" : "2. SD CARD ERR");
-  Serial.println(sdOk ? "Carte SD detectee." : "Erreur Carte SD.");
+  if (SD.begin(SD_CS)) {
+    u8g2.drawStr(10, 60, "2. SD CARD OK");
+    Serial.println("Carte SD detectee.");
+  } else {
+    u8g2.drawStr(10, 60, "2. SD CARD ERR");
+    Serial.println("Erreur Carte SD.");
+  }
   u8g2.sendBuffer();
 
+  // 3. Boutons
   pinMode(BTN_OK, INPUT_PULLUP);
   pinMode(BTN_UP, INPUT_PULLUP);
   pinMode(BTN_DOWN, INPUT_PULLUP);
@@ -49,13 +48,12 @@ void loop() {
   u8g2.clearBuffer();
   u8g2.setFont(u8g2_font_6x12_tf);
   u8g2.drawStr(10, 20, "APPUIE SUR LES BOUTONS :");
-  u8g2.drawStr(10, 140, sdOk ? "SD: OK" : "SD: ERR");
 
-  if (digitalRead(BTN_UP)   == LOW) u8g2.drawStr(10, 50,  "UP   [PRESSE]");
-  if (digitalRead(BTN_DOWN) == LOW) u8g2.drawStr(10, 70,  "DOWN [PRESSE]");
-  if (digitalRead(BTN_OK)   == LOW) u8g2.drawStr(10, 90,  "OK   [PRESSE]");
-  if (digitalRead(BTN_BACK) == LOW) u8g2.drawStr(10, 110, "BACK [PRESSE]");
+  if(digitalRead(BTN_UP) == LOW)   u8g2.drawStr(10, 50, "UP   [PRESSE]");
+  if(digitalRead(BTN_DOWN) == LOW) u8g2.drawStr(10, 70, "DOWN [PRESSE]");
+  if(digitalRead(BTN_OK) == LOW)   u8g2.drawStr(10, 90, "OK   [PRESSE]");
+  if(digitalRead(BTN_BACK) == LOW) u8g2.drawStr(10, 110, "BACK [PRESSE]");
 
   u8g2.sendBuffer();
-  delay(50);
+  delay(100);
 }

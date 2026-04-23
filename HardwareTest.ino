@@ -10,7 +10,7 @@
 #define BTN_BACK  21
 
 // Mise à jour ici aussi (Reset sur Pin 4)
-U8G2_ST75256_JLX256160_F_4W_SW_SPI u8g2(U8G2_R0, 18, 23, 5, 2, 4);
+U8G2_ST75256_JLX256160_F_4W_SW_SPI u8g2(U8G2_R0, 18, 23, 5, 2, 0);
 
 void setup() {
   Serial.begin(115200);
